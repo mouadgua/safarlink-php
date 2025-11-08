@@ -36,74 +36,6 @@
             padding-bottom: 80px; /* Espace pour la navbar en bas */
         }
         
-        /* Navbar en bas */
-        .navbar-bottom {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--primary);
-            border-radius: 50px;
-            padding: 12px 20px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 90%;
-            max-width: 500px;
-        }
-        
-        .navbar-bottom:hover {
-            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.15);
-            transform: translateX(-50%) translateY(-2px);
-        }
-        
-        .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-        
-        .nav-links {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            flex-grow: 1;
-        }
-        
-        .nav-link {
-            color: var(--accent);
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 20px;
-            transition: var(--transition);
-            text-align: center;
-            font-size: 0.85rem;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .nav-link i {
-            font-size: 1.1rem;
-        }
-        
-        .nav-link:hover {
-            color: var(--secondary);
-            background-color: rgba(255, 215, 0, 0.1);
-        }
-        
-        .nav-link.active {
-            color: var(--secondary);
-            background-color: rgba(255, 215, 0, 0.15);
-        }
-        
         .logo {
             display: none; /* Caché sur mobile */
         }
@@ -379,124 +311,6 @@
                 padding-bottom: 0; /* Retire l'espace pour la navbar en bas sur desktop */
             }
             
-            .navbar-bottom {
-                display: none; /* Cache la navbar en bas sur desktop */
-            }
-            
-            /* Navbar en haut pour desktop */
-            .navbar-top {
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: var(--primary);
-                border-radius: 50px;
-                padding: 12px 30px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-                transition: var(--transition);
-                border: 1px solid rgba(0, 0, 0, 0.05);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-width: 700px;
-                max-width: 90%;
-            }
-            
-            .navbar-top:hover {
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-                transform: translateX(-50%) translateY(-2px);
-            }
-            
-            .nav-container-desktop {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-            }
-            
-            .nav-links-desktop {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-grow: 1;
-            }
-            
-            .nav-link-desktop {
-                color: var(--accent);
-                font-weight: 500;
-                margin: 0 12px;
-                padding: 8px 16px;
-                border-radius: 20px;
-                transition: var(--transition);
-                text-align: center;
-                font-size: 0.95rem;
-                text-decoration: none;
-            }
-            
-            .nav-link-desktop:hover {
-                color: var(--secondary);
-                background-color: rgba(255, 215, 0, 0.1);
-            }
-            
-            .nav-link-desktop.active {
-                color: var(--secondary);
-                background-color: rgba(255, 215, 0, 0.15);
-            }
-            
-            .logo-desktop {
-                font-weight: 700;
-                font-size: 1.4rem;
-                color: var(--accent);
-                letter-spacing: -0.5px;
-                margin-right: 20px;
-            }
-            
-            .logo-desktop span {
-                color: var(--secondary);
-            }
-            
-            .auth-buttons-desktop {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-left: 20px;
-            }
-            
-            .btn-login {
-                background-color: transparent;
-                color: var(--accent);
-                border: 1px solid var(--secondary);
-                padding: 8px 20px;
-                border-radius: 20px;
-                font-weight: 500;
-                font-size: 0.9rem;
-                transition: var(--transition);
-            }
-            
-            .btn-login:hover {
-                background-color: rgba(255, 215, 0, 0.1);
-                transform: translateY(-2px);
-            }
-            
-            .btn-signup {
-                background-color: var(--secondary);
-                color: var(--accent);
-                border: none;
-                padding: 8px 20px;
-                border-radius: 20px;
-                font-weight: 500;
-                font-size: 0.9rem;
-                transition: var(--transition);
-                box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
-            }
-            
-            .btn-signup:hover {
-                background-color: #ffdf33;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-            }
-            
             .hero-title {
                 font-size: 3.5rem;
             }
@@ -512,47 +326,13 @@
     </style>
 </head>
 <body>
-    <!-- Navbar en haut (Desktop) -->
-    <nav class="navbar-top d-none d-md-flex">
-        <div class="nav-container-desktop">
-            <a class="navbar-brand logo-desktop" href="#">Safar<span>Link</span></a>
-            <div class="nav-links-desktop">
-                <a class="nav-link-desktop active" href="#accueil">Accueil</a>
-                <a class="nav-link-desktop" href="#fonctionnalites">Fonctionnalités</a>
-                <a class="nav-link-desktop" href="#comment-ca-marche">Comment ça marche</a>
-                <a class="nav-link-desktop" href="#temoignages">Témoignages</a>
-                <a class="nav-link-desktop" href="#contact">Contact</a>
-            </div>
-            <div class="auth-buttons-desktop">
-                <button class="btn-login">Connexion</button>
-                <button class="btn-signup">Inscription</button>
-            </div>
-        </div>
-    </nav>
+        <?php include("components/loader.php")?>
 
-    <!-- Navbar en bas (Mobile) -->
-    <nav class="navbar-bottom d-md-none">
-        <div class="nav-container">
-            <div class="nav-links">
-                <a class="nav-link active" href="#accueil">
-                    <i class="fas fa-home"></i>
-                    <span>Accueil</span>
-                </a>
-                <a class="nav-link" href="#fonctionnalites">
-                    <i class="fas fa-star"></i>
-                    <span>trajets</span>
-                </a>
-                <a class="nav-link" href="#temoignages">
-                    <i class="fas fa-comment"></i>
-                    <span>blog</span>
-                </a>
-                <a class="nav-link" href="#contact">
-                    <i class="fas fa-user"></i>
-                    <span>Compte</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+    <!-- Inclusion de la Navbar Desktop -->
+    <?php include 'components/navbar-desktop.php'; ?>
+
+    <!-- Inclusion de la Navbar Mobile -->
+    <?php include 'components/navbar-mobile.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero-section" id="accueil">
@@ -560,7 +340,7 @@
             <h1 class="hero-title">Voyagez malin avec <span style="color: var(--secondary);">SafarLink</span></h1>
             <p class="hero-subtitle">Notre plateforme de covoiturage connecte conducteurs et passagers pour des trajets économiques, écologiques et conviviaux. Rejoignez notre communauté dès aujourd'hui !</p>
             <div class="mt-4">
-                <button class="btn btn-primary-custom me-2 mb-2">Commencer maintenant</button>
+                <button class="btn btn-primary-custom me-2 mb-2" onclick="window.location.href='inscription.php'">Commencer maintenant</button>
                 <button class="btn btn-outline-dark rounded-pill px-4 mb-2">En savoir plus</button>
             </div>
         </div>

@@ -7,13 +7,13 @@
         <a class="navbar-brand logo-desktop" href="index.php">Safar<span>Link</span></a>
         <div class="nav-links-desktop">
             <a class="nav-link-desktop <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>" href="index.php">Accueil</a>
-            <a class="nav-link-desktop <?php echo basename($_SERVER['PHP_SELF']) == 'trajets.php' ? 'active' : ''; ?>" href="trajets.php">Trajets</a>
+            <a class="nav-link-desktop <?php echo basename($_SERVER['PHP_SELF']) == 'trips.php' ? 'active' : ''; ?>" href="trips.php">Trajets</a>
             <a class="nav-link-desktop <?php echo basename($_SERVER['PHP_SELF']) == 'blog.php' ? 'active' : ''; ?>" href="blog.php">Blog</a>
             <a class="nav-link-desktop <?php echo basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''; ?>" href="contact.php">Contact</a>
         </div>
         <div class="auth-buttons-desktop">
-            <button class="btn-login" onclick="window.location.href='connexion.php'">Connexion</button>
-            <button class="btn-signup" onclick="window.location.href='inscription.php'">Inscription</button>
+            <button class="btn-login" onclick="window.location.href='login.php'">Connexion</button>
+            <button class="btn-signup" onclick="window.location.href='register.php'">Inscription</button>
         </div>
     </div>
 </nav>
