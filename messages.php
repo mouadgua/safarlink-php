@@ -1,14 +1,8 @@
 <?php
-session_start();
-require_once 'config/db.php';
+require_once 'config/init.php';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit;
-}
+requireLogin();
 
-$database = new Database();
-$db = $database->getConnection();
 $user_id = $_SESSION['user']['id'];
 
 // Récupérer les conversations
@@ -90,11 +84,7 @@ if (isset($_GET['conversation_id'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body class="bg-gray-50 font-sans">
-    <!-- Inclusion de la Navbar Desktop -->
-    <?php include 'components/navbar-desktop.php'; ?>
-
-    <!-- Inclusion de la Navbar Mobile -->
-    <?php include 'components/navbar-mobile.php'; ?>
+    <?php include 'components/navbar.php'; ?>
 
     <!-- Loader -->
     <?php include 'components/loader.php'; ?>

@@ -1,13 +1,9 @@
 <?php
-session_start();
-require_once 'config/db.php';
+require_once 'config/init.php';
 
 if (isset($_GET['code']) && isset($_GET['email'])) {
     $verification_code = $_GET['code'];
     $email = urldecode($_GET['email']);
-    
-    $database = new Database();
-    $db = $database->getConnection();
     
     // Vérifier le code
     $query = "SELECT id FROM users WHERE email = :email AND verification_code = :code";
@@ -29,7 +25,7 @@ if (isset($_GET['code']) && isset($_GET['email'])) {
             $success = true;
             
             // Logger l'action
-            logAdminAction($user['id'], 'EMAIL_VERIFIED', 'Email vérifié avec succès');
+            logAdminAction($db, $user['id'], 'EMAIL_VERIFIED', 'Email vérifié avec succès');
         } else {
             $message = "Erreur lors de l'activation du compte. Veuillez réessayer.";
             $success = false;

@@ -1,17 +1,7 @@
 <?php
 header('Content-Type: application/json');
-// Activer l'affichage des erreurs pour le débogage
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-// Vérifier si le fichier de configuration existe
-if (!file_exists('../config/db.php')) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Fichier de configuration manquant']);
-    exit;
-}
-
-require_once '../config/db.php';
+require_once '../config/init.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -20,13 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $database = new Database();
-    $db = $database->getConnection();
-    
-    if (!$db) {
-        throw new Exception('Impossible de se connecter à la base de données');
-    }
-    
     // Récupérer les données
     $input = file_get_contents('php://input');
     if (empty($input)) {
@@ -114,14 +97,12 @@ try {
         $user_id = $db->lastInsertId();
         
         // Logger l'action (si la fonction existe)
-        if (function_exists('logAdminAction')) {
-            logAdminAction($user_id, 'USER_REGISTER', 'Nouvel utilisateur inscrit: ' . $email);
-        }
+        logAdminAction($db, $user_id, 'USER_REGISTER', 'Nouvel utilisateur inscrit: ' . $email);
         
         http_response_code(201);
         echo json_encode([
             'success' => true,
-            'message' => 'Compte créé avec succès. Vous pouvez maintenant vous connecter.',
+            'message' => 'Compte créé avec succès. Un email de vérification vous a été envoyé.',
             'user_id' => $user_id
         ]);
     } else {

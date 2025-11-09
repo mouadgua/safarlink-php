@@ -1,14 +1,8 @@
 <?php
-session_start();
-require_once 'config/db.php';
+require_once 'config/init.php';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit;
-}
+requireLogin();
 
-$database = new Database();
-$db = $database->getConnection();
 $user_id = $_SESSION['user']['id'];
 $user_type = $_SESSION['user']['user_type'];
 
@@ -56,8 +50,7 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 font-sans">
-    <!-- Inclusion de la Navbar Desktop -->
-    <?php include 'components/navbar-desktop.php'; ?>
+    <?php include 'components/loader.php'; ?>
 
     <?php include 'components/navbar.php'; ?>
 
@@ -183,8 +176,8 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <?php echo $item['total_bookings']; ?> réservation(s)
                                         </span>
                                         <span class="flex items-center">
-                                            <i class="fas fa-euro-sign mr-1"></i>
-                                            Total: <?php echo ($item['price_per_seat'] * $item['available_seats']); ?>€
+                                            <i class="fas fa-coins mr-1"></i>
+                                            Total: <?php echo ($item['price_per_seat'] * $item['available_seats']); ?> Dhs
                                         </span>
                                         <?php else: ?>
                                         <span class="flex items-center">
@@ -192,8 +185,8 @@ $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             Conducteur: <?php echo $item['driver_first_name'] . ' ' . $item['driver_last_name']; ?>
                                         </span>
                                         <span class="flex items-center">
-                                            <i class="fas fa-euro-sign mr-1"></i>
-                                            Prix: <?php echo $item['total_price']; ?>€
+                                            <i class="fas fa-coins mr-1"></i>
+                                            Prix: <?php echo $item['total_price']; ?> Dhs
                                         </span>
                                         <span class="flex items-center">
                                             <i class="fas fa-chair mr-1"></i>

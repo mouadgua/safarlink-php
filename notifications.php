@@ -1,14 +1,8 @@
 <?php
-session_start();
-require_once 'config/db.php';
+require_once 'config/init.php';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
-    exit;
-}
+requireLogin();
 
-$database = new Database();
-$db = $database->getConnection();
 $user_id = $_SESSION['user']['id'];
 
 // Récupérer les notifications
@@ -73,9 +67,9 @@ if (isset($_GET['mark_as_read']) && $_GET['mark_as_read'] == 'all') {
                         </span>
                         <?php endif; ?>
                         
-                        <button onclick="markAllAsRead()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <a href="notifications.php?mark_as_read=all" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                             <i class="fas fa-check-double mr-2"></i>Tout marquer comme lu
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -103,7 +97,7 @@ if (isset($_GET['mark_as_read']) && $_GET['mark_as_read'] == 'all') {
                     
                     <div class="flex-1 md:ml-auto">
                         <div class="relative">
-                            <input type="text" placeholder="Rechercher..." class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                            <input type="text" id="search-notifications" placeholder="Rechercher..." class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>
                     </div>
@@ -206,6 +200,23 @@ if (isset($_GET['mark_as_read']) && $_GET['mark_as_read'] == 'all') {
             });
         });
 
+        // Recherche de notifications
+        document.getElementById('search-notifications').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.notification-card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const message = card.querySelector('p').textContent.toLowerCase();
+                if (title.includes(searchTerm) || message.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    gsap.to(card, { opacity: 1, y: 0, duration: 0.3 });
+                } else {
+                    gsap.to(card, { 
+                        opacity: 0, y: -20, duration: 0.3, onComplete: () => card.style.display = 'none' 
+                    });
+                }
+            });
+        });
+
         // Marquer tout comme lu
         function markAllAsRead() {
             window.location.href = 'notifications.php?mark_as_read=all';
@@ -271,36 +282,21 @@ function getNotificationActions($notification) {
     $actions = '';
     
     switch ($notification['type']) {
-        case 'booking':
-            $actions = '
-                <button class="px-3 py-1 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition-colors">
-                    <i class="fas fa-check mr-1"></i>Accepter
-                </button>
-                <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors">
-                    <i class="fas fa-times mr-1"></i>Refuser
-                </button>
-                <button class="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-eye mr-1"></i>Voir détails
-                </button>
-            ';
+        case 'booking': // Notification pour un conducteur
+        case 'confirmation': // Notification pour un passager
+            if ($notification['related_booking_id']) {
+                $actions = '
+                    <a href="booking-details.php?id=' . $notification['related_booking_id'] . '" class="px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition-colors">
+                        <i class="fas fa-eye mr-1"></i>Voir détails
+                    </a>
+                ';
+            }
             break;
-            
-        case 'confirmation':
-            $actions = '
-                <button class="px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 transition-colors">
-                    <i class="fas fa-qrcode mr-1"></i>Voir QR Code
-                </button>
-                <button class="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-map-marker-alt mr-1"></i>Voir trajet
-                </button>
-            ';
-            break;
-            
         case 'reminder':
             $actions = '
-                <button class="px-3 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors">
-                    <i class="fas fa-clock mr-1"></i>Programmer
-                </button>
+                <a href="my-bookings.php?tab=upcoming" class="px-3 py-1 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-calendar-alt mr-1"></i>Voir mes trajets
+                </a>
             ';
             break;
     }

@@ -1,15 +1,9 @@
 <?php
-session_start();
-require_once 'config/db.php';
+require_once 'config/init.php';
 
 // Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['user']) || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header('Location: login.php');
-    exit;
-}
+requireLogin();
 
-$database = new Database();
-$db = $database->getConnection();
 $user_id = $_SESSION['user']['id'];
 
 // Récupérer les données réelles de l'utilisateur depuis la base de données
@@ -154,6 +148,15 @@ $upcoming_trips = $trips_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <main class="pt-16 md:pt-24 pb-20 md:pb-8">
         <div class="container mx-auto px-4">
+            <?php if (isset($_SESSION['error_message'])): ?>
+                <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <?php 
+                        echo $_SESSION['error_message']; 
+                        unset($_SESSION['error_message']); // On supprime le message pour ne pas l'afficher à nouveau
+                    ?>
+                </div>
+            <?php endif; ?>
             <!-- En-tête du profil -->
             <div class="bg-white rounded-xl shadow-md p-6 mb-6 profile-section">
                 <div class="flex flex-col md:flex-row items-center">
@@ -273,11 +276,11 @@ $upcoming_trips = $trips_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <div class="text-2xl font-bold text-purple-600">
-                                            <?php echo $user_stats['total_earnings'] ?? 0; ?>€
+                                            <?php echo $user_stats['total_earnings'] ?? 0; ?> Dhs
                                         </div>
                                         <div class="text-sm text-gray-600">Revenus totaux</div>
                                     </div>
-                                    <i class="fas fa-euro-sign text-purple-500 text-xl"></i>
+                                    <i class="fas fa-coins text-purple-500 text-xl"></i>
                                 </div>
                             </div>
                             
@@ -323,7 +326,7 @@ $upcoming_trips = $trips_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <div class="text-2xl font-bold text-purple-600">
-                                            <?php echo $user_stats['total_savings'] ?? 0; ?>€
+                                            <?php echo $user_stats['total_savings'] ?? 0; ?> Dhs
                                         </div>
                                         <div class="text-sm text-gray-600">Économies totales</div>
                                     </div>
@@ -339,7 +342,7 @@ $upcoming_trips = $trips_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <h2 class="text-xl font-bold text-gray-800 mb-4">Actions rapides</h2>
                         <div class="space-y-3">
                             <?php if ($user['user_type'] == 'driver'): ?>
-                            <button onclick="window.location.href='create-trip.php'" class="w-full text-left p-3 rounded-lg border border-gray-300 hover:bg-orange-50 hover:border-orange-300 transition-colors">
+                        <button onclick="window.location.href='propose-trip.php'" class="w-full text-left p-3 rounded-lg border border-gray-300 hover:bg-orange-50 hover:border-orange-300 transition-colors">
                                 <i class="fas fa-plus-circle text-orange-500 mr-3"></i>
                                 <span>Proposer un trajet</span>
                             </button>
@@ -485,10 +488,10 @@ $upcoming_trips = $trips_stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <span class="font-medium 
                                             <?php echo ($trip['status'] ?? 'confirmed') == 'confirmed' ? 'text-orange-600' : 'text-blue-600'; ?>">
                                             <?php 
-                                            if ($user['user_type'] == 'driver') {
-                                                echo (($trip['price_per_seat'] ?? 0) * ($trip['passengers_count'] ?? 0)) . '€';
+                                            if ($user['user_type'] == 'driver' && isset($trip['passengers_count'])) {
+                                                echo (($trip['price_per_seat'] ?? 0) * ($trip['passengers_count'] ?? 0)) . ' Dhs';
                                             } else {
-                                                echo $trip['total_price'] . '€';
+                                                echo ($trip['total_price'] ?? '0') . ' Dhs';
                                             }
                                             ?>
                                         </span>

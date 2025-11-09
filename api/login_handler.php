@@ -1,18 +1,7 @@
 <?php
 header('Content-Type: application/json');
-// Activer l'affichage des erreurs pour le débogage
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-// Vérifier si le fichier de configuration existe
-if (!file_exists('../config/db.php')) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Fichier de configuration manquant']);
-    exit;
-}
-
-session_start();
-require_once '../config/db.php';
+require_once '../config/init.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -21,13 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $database = new Database();
-    $db = $database->getConnection();
-    
-    if (!$db) {
-        throw new Exception('Impossible de se connecter à la base de données');
-    }
-    
     // Récupérer les données
     $input = file_get_contents('php://input');
     if (empty($input)) {
@@ -110,9 +92,7 @@ try {
     $update_stmt->execute();
     
     // Logger la connexion (si la fonction existe)
-    if (function_exists('logAdminAction')) {
-        logAdminAction($user['id'], 'USER_LOGIN', 'Connexion réussie');
-    }
+    logAdminAction($db, $user['id'], 'USER_LOGIN', 'Connexion réussie');
     
     http_response_code(200);
     echo json_encode([

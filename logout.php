@@ -1,12 +1,10 @@
 <?php
-session_start();
-require_once 'config/db.php';
+require_once 'config/init.php';
 
 // Logger la déconnexion si l'utilisateur était connecté
 if (isset($_SESSION['user'])) {
-    $database = new Database();
-    $db = $database->getConnection();
-    logAdminAction($_SESSION['user']['id'], 'USER_LOGOUT', 'Déconnexion');
+    // $db est déjà disponible grâce à init.php
+    logAdminAction($db, $_SESSION['user']['id'], 'USER_LOGOUT', 'Déconnexion');
 }
 
 // Détruire la session

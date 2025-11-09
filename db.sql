@@ -1,9 +1,9 @@
 -- Création de la base de données
-CREATE DATABASE safarlink;
+CREATE DATABASE IF NOT EXISTS safarlink;
 USE safarlink;
 
 -- Table des établissements
-CREATE TABLE establishments (
+CREATE TABLE IF NOT EXISTS establishments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     address TEXT,
@@ -39,11 +39,12 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Table des trajets
-CREATE TABLE trips (
+CREATE TABLE IF NOT EXISTS trips (
     id INT PRIMARY KEY AUTO_INCREMENT,
     driver_id INT NOT NULL,
     departure_establishment_id INT,
     destination_establishment_id INT,
+    -- Ces colonnes stockent le nom textuel de l'adresse, même si un établissement est choisi
     departure_address TEXT NOT NULL,
     destination_address TEXT NOT NULL,
     departure_latitude DECIMAL(10, 8),
@@ -55,6 +56,8 @@ CREATE TABLE trips (
     available_seats INT NOT NULL,
     price_per_seat DECIMAL(8,2) NOT NULL,
     description TEXT,
+    trip_rules TEXT,
+    possible_detours TEXT,
     status ENUM('scheduled', 'in_progress', 'completed', 'cancelled') DEFAULT 'scheduled',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (driver_id) REFERENCES users(id),
@@ -63,7 +66,7 @@ CREATE TABLE trips (
 );
 
 -- Table des réservations
-CREATE TABLE bookings (
+CREATE TABLE IF NOT EXISTS bookings (
     id INT PRIMARY KEY AUTO_INCREMENT,
     trip_id INT NOT NULL,
     passenger_id INT NOT NULL,
@@ -81,7 +84,7 @@ CREATE TABLE bookings (
 );
 
 -- Table des avis et notations
-CREATE TABLE reviews (
+CREATE TABLE IF NOT EXISTS reviews (
     id INT PRIMARY KEY AUTO_INCREMENT,
     booking_id INT NOT NULL,
     reviewer_id INT NOT NULL,
@@ -95,7 +98,7 @@ CREATE TABLE reviews (
 );
 
 -- Table des notifications
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -109,7 +112,7 @@ CREATE TABLE notifications (
 );
 
 -- Table des logs d'administration
-CREATE TABLE admin_logs (
+CREATE TABLE IF NOT EXISTS admin_logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     action VARCHAR(255) NOT NULL,
@@ -121,7 +124,7 @@ CREATE TABLE admin_logs (
 );
 
 -- Insertion des établissements de test
-INSERT INTO establishments (name, address, city, postal_code, latitude, longitude) VALUES
+INSERT INTO establishments (name, address, city, postal_code, latitude, longitude) VALUES 
 ('Cité des Métiers et Compétences', '123 Avenue de la Formation', 'Casablanca', '20000', 33.573110, -7.589843),
 ('Université Mohammed VI', '456 Boulevard des Sciences', 'Rabat', '10000', 34.020882, -6.841650),
 ('École Nationale de Commerce', '789 Rue des Affaires', 'Marrakech', '40000', 31.629472, -8.008955),

@@ -274,6 +274,11 @@
             <p class="text-muted">Connectez-vous à votre compte</p>
         </div>
         
+        <!-- Zone d'affichage des erreurs -->
+        <div id="error-message" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg hidden" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i><span id="error-text"></span>
+        </div>
+
         <form id="loginForm">
             <div class="form-group">
                 <label for="email" class="form-label">Adresse email</label>
@@ -361,14 +366,22 @@
 
                 const data = await response.json();
 
+                const errorDiv = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+
                 if (response.ok) {
-                    alert('Connexion réussie ! Vous allez être redirigé.');
-                    window.location.href = 'index.php';
+                    errorDiv.classList.add('hidden');
+                    // Redirection vers le profil après connexion
+                    window.location.href = 'profile.php';
                 } else {
-                    alert(`Erreur: ${data.error_description || data.error || 'Une erreur est survenue.'}`);
+                    errorText.textContent = data.error_description || data.error || 'Une erreur est survenue.';
+                    errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                alert('Une erreur réseau est survenue. Veuillez réessayer.');
+                const errorDiv = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+                errorText.textContent = 'Une erreur réseau est survenue. Veuillez réessayer.';
+                errorDiv.classList.remove('hidden');
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Se connecter';

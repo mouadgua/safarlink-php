@@ -317,6 +317,11 @@
             <p class="text-muted">Créez votre compte</p>
         </div>
         
+        <!-- Zone d'affichage des erreurs -->
+        <div id="error-message" class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg hidden" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i><span id="error-text"></span>
+        </div>
+
         <form id="signupForm">
             <div class="name-fields">
                 <div class="form-group">
@@ -447,14 +452,18 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const submitButton = this.querySelector('button[type="submit"]');
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
             
             if (password !== confirmPassword) {
-                alert('Les mots de passe ne correspondent pas !');
+                errorText.textContent = 'Les mots de passe ne correspondent pas !';
+                errorDiv.classList.remove('hidden');
                 return;
             }
 
             if (password.length < 6) {
-                alert('Le mot de passe doit contenir au moins 6 caractères.');
+                errorText.textContent = 'Le mot de passe doit contenir au moins 6 caractères.';
+                errorDiv.classList.remove('hidden');
                 submitButton.disabled = false;
                 return;
             }
@@ -481,21 +490,19 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    errorDiv.classList.add('hidden');
                     alert('Inscription réussie ! Veuillez vérifier votre email pour activer votre compte. Vous allez être redirigé vers la page de connexion.');
                     window.location.href = 'login.php';
                 } else {
                     let errorMessage = 'Une erreur est survenue.';
-                    if (data && data.msg) {
-                        errorMessage = data.msg;
-                    } else if (data && data.message) {
-                        errorMessage = data.message;
-                    } else if (data && data.error_description) {
-                        errorMessage = data.error_description;
-                    }
-                    alert(`Erreur: ${errorMessage}`);
+                    errorMessage = data.msg || data.message || data.error_description || errorMessage;
+                    
+                    errorText.textContent = errorMessage;
+                    errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                alert('Une erreur réseau est survenue. Veuillez réessayer.');
+                errorText.textContent = 'Une erreur réseau est survenue. Veuillez réessayer.';
+                errorDiv.classList.remove('hidden');
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Créer mon compte';
