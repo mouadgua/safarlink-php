@@ -317,11 +317,11 @@
         </div>
         
         <div class="signup-link">
-            <p>Vous n'avez pas de compte ? <a href="inscription.html">S'inscrire</a></p>
+            <p>Vous n'avez pas de compte ? <a href="register.php">S'inscrire</a></p>
         </div>
         
         <div class="back-home">
-            <a href="index.html"><i class="fas fa-arrow-left me-1"></i> Retour à l'accueil</a>
+            <a href="index.php"><i class="fas fa-arrow-left me-1"></i> Retour à l'accueil</a>
         </div>
     </div>
 
@@ -343,10 +343,36 @@
         });
         
         // Gestion du formulaire
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // Ici vous ajouteriez la logique de connexion
-            alert('Connexion réussie ! (simulation)');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Connexion en cours...';
+
+            try {
+                const response = await fetch('api/login_handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Connexion réussie ! Vous allez être redirigé.');
+                    window.location.href = 'index.php';
+                } else {
+                    alert(`Erreur: ${data.error_description || data.error || 'Une erreur est survenue.'}`);
+                }
+            } catch (error) {
+                alert('Une erreur réseau est survenue. Veuillez réessayer.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Se connecter';
+            }
         });
     </script>
 </body>

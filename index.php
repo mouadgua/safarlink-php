@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -329,10 +332,7 @@
         <?php include("components/loader.php")?>
 
     <!-- Inclusion de la Navbar Desktop -->
-    <?php include 'components/navbar-desktop.php'; ?>
-
-    <!-- Inclusion de la Navbar Mobile -->
-    <?php include 'components/navbar-mobile.php'; ?>
+    <?php include 'components/navbar.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero-section" id="accueil">

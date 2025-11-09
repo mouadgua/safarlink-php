@@ -400,11 +400,11 @@
         </div>
         
         <div class="login-link">
-            <p>Vous avez déjà un compte ? <a href="connexion.html">Se connecter</a></p>
+            <p>Vous avez déjà un compte ? <a href="login.php">Se connecter</a></p>
         </div>
         
         <div class="back-home">
-            <a href="index.html"><i class="fas fa-arrow-left me-1"></i> Retour à l'accueil</a>
+            <a href="index.php"><i class="fas fa-arrow-left me-1"></i> Retour à l'accueil</a>
         </div>
     </div>
 
@@ -441,19 +441,65 @@
         });
         
         // Gestion du formulaire
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const submitButton = this.querySelector('button[type="submit"]');
             
             if (password !== confirmPassword) {
                 alert('Les mots de passe ne correspondent pas !');
                 return;
             }
-            
-            // Ici vous ajouteriez la logique d'inscription
-            alert('Inscription réussie ! (simulation)');
+
+            if (password.length < 6) {
+                alert('Le mot de passe doit contenir au moins 6 caractères.');
+                submitButton.disabled = false;
+                return;
+            }
+
+            const formData = {
+                email: document.getElementById('email').value,
+                password: password,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                phone: document.getElementById('phone').value,
+                userType: document.querySelector('input[name="userType"]:checked').value
+            };
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Création du compte...';
+
+            try {
+                const response = await fetch('api/register_handler.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Inscription réussie ! Veuillez vérifier votre email pour activer votre compte. Vous allez être redirigé vers la page de connexion.');
+                    window.location.href = 'login.php';
+                } else {
+                    let errorMessage = 'Une erreur est survenue.';
+                    if (data && data.msg) {
+                        errorMessage = data.msg;
+                    } else if (data && data.message) {
+                        errorMessage = data.message;
+                    } else if (data && data.error_description) {
+                        errorMessage = data.error_description;
+                    }
+                    alert(`Erreur: ${errorMessage}`);
+                }
+            } catch (error) {
+                alert('Une erreur réseau est survenue. Veuillez réessayer.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Créer mon compte';
+            }
         });
     </script>
 </body>
